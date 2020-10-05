@@ -1,3 +1,7 @@
+body {
+  font-family: "Audiowide", "Titillium Web", "sans-serif";
+  color: #4ea091;
+}
 .App {
   text-align: center;
 }
@@ -35,4 +39,9 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
 }

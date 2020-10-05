@@ -10,6 +10,7 @@ import {
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Home from "./pages/home";
 import Transmission from "./pages/transmission";
+import Character from "./pages/character";
 
 const mySounds = {
   shared: { volume: 1 }, // Shared sound settings
@@ -36,6 +37,9 @@ ReactDOM.render(
       <SoundsProvider sounds={createSounds(mySounds)}>
         <Router>
           <Switch>
+            <Route path="/character">
+              <Character />
+            </Route>
             <Route path="/transmission">
               <Transmission />
             </Route>

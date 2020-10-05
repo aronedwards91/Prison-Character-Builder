@@ -23,7 +23,7 @@ function Transmission() {
               </Words>
             </p>
             <div style={{ textAlign: "right", marginTop: "20px" }}>
-              <Link to="/transmission">
+              <Link to="/character">
                 <Button animate layer="success">
                   Attachment
                 </Button>
