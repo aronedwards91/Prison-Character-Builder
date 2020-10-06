@@ -66,3 +66,11 @@
 .row-space {
   justify-content: space-between;
 }
+.flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+.sheet--skill-opt {
+  font-size: 13px;
+  font-style: italic;
+}

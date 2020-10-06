@@ -7,15 +7,21 @@ const inputId = "file-img-input";
 const Layout = () => {
   const [cardImg, setCardImg] = useState(null);
   const [contacts, setContacts] = useState("Test");
-  const [skills, setSkills] = useState(["skill 1", "skill 2"]);
+  const [skills, setSkills] = useState([]);
   const [points, setPoints] = useState(3);
 
-  const adjPoints = (reduce) => {
-    if (reduce && points > 0) {
+  const adjPoints = (increase) => {
+    if (!increase && points > 0) {
       setPoints(points - 1);
-    } else if (!reduce) {
+    } else if (increase) {
       setPoints(points + 1);
     }
+  };
+  const addSkill = (skill) => {
+    const newArray = [...skills];
+    newArray.push(skill);
+    setSkills(newArray);
+    adjPoints();
   };
 
   function thisFileUpload() {
@@ -89,19 +95,49 @@ const Layout = () => {
         <Frame show animate level={3} corners={4} layer="primary">
           <h4 style={{ padding: "0 20px" }}>Background</h4>
           <textarea
-            rows="4"
+            rows="6"
             className="sheet-textarea"
             placeholder="Enter Background here..."
           ></textarea>
         </Frame>
       </div>
-      <Options points={points} adjPoints={adjPoints} />
+      <Options points={points} adjPoints={adjPoints} addSkill={addSkill} />
     </div>
   );
 };
 
-const Options = ({ points, adjPoints }) => {
-  const hasPoints = points > 0;
+const Skill = {
+  Persuation: "The ability to logically convince another",
+  Charm: "The ability to use your charisma to influence others",
+  Intimidation: "How easily you can scare others",
+  Bluff: "convincing liar",
+  Strength: "Sheer physical ability",
+  Calm: "Inner mental strength",
+  Sneak: "How quietly you can move around",
+  Pickpocket: "How sneaky your fingers are",
+  Electrics: "Your knowledge of electrical systems",
+  Hacking: "You knowledge of computer systems",
+  Brawler: "Natural fighting skills",
+  Gymnast: "Your capacity for acrobatics",
+  Impersonation: "Your ability to impersonate others",
+  Medic: "Help provide injury treatment",
+};
+const SkillAlien = {
+  Darkvision: "See in the dark",
+  Hypersmell: "Bloodhound like nasal ability",
+  Echolocation: "3d sound based vision",
+  StickyHands: "lizard like cling ability",
+};
+const contacts = {
+  Deliveries: "Know someone in the deliveries sector",
+  Mob: "Have connections in organised crime, providing you with protection",
+  Guard: "Know one of the guards",
+  Politician:
+    "Political connections protect you somewhat from the prison's punishments",
+  Construction: "Know someone who helped build another similar prison",
+};
+const Options = ({ points, adjPoints, addSkill }) => {
+  const noPoints = points <= 0;
 
   return (
     <div className="row sheet--charbg">
@@ -117,6 +153,34 @@ const Options = ({ points, adjPoints }) => {
         </Words>
         <Line animate />
         <h4>Skills</h4>
+        <Line animate />
+        <div className="flex-wrap">
+          {Object.keys(Skill).map((key) => (
+            <Button
+              animate
+              style={{ margin: "5px" }}
+              layer={noPoints ? "alert" : 'control'}
+              onClick={() => addSkill(key)}
+            >
+              {key}: <span className="sheet--skill-opt">{Skill[key]}</span>
+            </Button>
+          ))}
+        </div>
+        <Line animate />
+        <h4>Alien Skills (Requires you to be non-human)</h4>
+        <Line animate />
+        <div className="flex-wrap">
+          {Object.keys(SkillAlien).map((key) => (
+            <Button
+              animate
+              style={{ margin: "5px" }}
+              layer={noPoints ? "alert" : 'control'}
+              onClick={() => addSkill(key)}
+            >
+              {key}: <span className="sheet--skill-opt">{SkillAlien[key]}</span>
+            </Button>
+          ))}
+        </div>
         <Line animate />
         <h4>Contacts</h4>
       </Frame>
