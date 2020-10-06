@@ -3,12 +3,13 @@ import { Frame, Words, Button, Line } from "arwes";
 import "./styles.css";
 
 const inputId = "file-img-input";
+const defaultPoints = 3;
 
 const Layout = () => {
   const [cardImg, setCardImg] = useState(null);
-  const [contacts, setContacts] = useState("Test");
+  const [contacts, setContact] = useState("");
   const [skills, setSkills] = useState([]);
-  const [points, setPoints] = useState(3);
+  const [points, setPoints] = useState(defaultPoints);
 
   const adjPoints = (increase) => {
     if (!increase && points > 0) {
@@ -16,12 +17,6 @@ const Layout = () => {
     } else if (increase) {
       setPoints(points + 1);
     }
-  };
-  const addSkill = (skill) => {
-    const newArray = [...skills];
-    newArray.push(skill);
-    setSkills(newArray);
-    adjPoints();
   };
 
   function thisFileUpload() {
@@ -32,7 +27,6 @@ const Layout = () => {
     reader.onload = function (e) {
       setCardImg(e.target.result);
     };
-    const files = Array.from(e.target.files);
     reader.readAsDataURL(e.target.files[0]);
   }
 
@@ -85,6 +79,7 @@ const Layout = () => {
             <div className="sheet--input-label">
               {"Stress:                 / 3"}
             </div>
+            <Line animate style={{margin: '10px 0 0'}}/>
             <Words style={{ padding: "10px" }}>Skills</Words>
             <Line animate />
             <div className="sheet--skill-fill">{skills.join("\n")}</div>
@@ -101,7 +96,14 @@ const Layout = () => {
           ></textarea>
         </Frame>
       </div>
-      <Options points={points} adjPoints={adjPoints} addSkill={addSkill} />
+      <Options
+        points={points}
+        adjPoints={adjPoints}
+        skills={skills}
+        setSkills={setSkills}
+        setContact={setContact}
+        setPoints={setPoints}
+      />
     </div>
   );
 };
@@ -122,12 +124,14 @@ const Skill = {
   Impersonation: "Your ability to impersonate others",
   Medic: "Help provide injury treatment",
 };
+const skillArr = Object.keys(Skill).map(() => false);
 const SkillAlien = {
   Darkvision: "See in the dark",
   Hypersmell: "Bloodhound like nasal ability",
   Echolocation: "3d sound based vision",
   StickyHands: "lizard like cling ability",
 };
+const skillAlienArr = Object.keys(SkillAlien).map(() => false);
 const contacts = {
   Deliveries: "Know someone in the deliveries sector",
   Mob: "Have connections in organised crime, providing you with protection",
@@ -136,8 +140,55 @@ const contacts = {
     "Political connections protect you somewhat from the prison's punishments",
   Construction: "Know someone who helped build another similar prison",
 };
-const Options = ({ points, adjPoints, addSkill }) => {
+
+const Options = ({
+  points,
+  adjPoints,
+  skills,
+  setSkills,
+  setPoints,
+  setContact,
+}) => {
+  const [pickedContact, setPickedC] = useState(false);
+  const [pickedSkills, setPickedSkills] = useState(skillArr);
+  const [pickedASkills, setPickedASkills] = useState(skillAlienArr);
   const noPoints = points <= 0;
+
+  const addSkill = (skill, index, alien = false) => {
+    const newArray = [...skills];
+    newArray.push(skill);
+    setSkills(newArray);
+    adjPoints();
+    if (alien) {
+      const newArray = [...pickedASkills];
+      newArray[index] = true;
+      setPickedASkills(newArray);
+    } else {
+      const newArray = [...pickedSkills];
+      newArray[index] = true;
+      setPickedSkills(newArray);
+    }
+  };
+  const clearSkills = () => {
+    setPoints(defaultPoints);
+    setPickedSkills(skillArr);
+    setPickedASkills(skillAlienArr);
+    setSkills([]);
+  };
+  function addContact(contact) {
+    if (!pickedContact) {
+      setContact(contact);
+      setPickedC(true);
+      adjPoints();
+    } else {
+      window.alert("Cannot pick more contacts");
+    }
+  }
+  function clearContact() {
+    setContact("");
+    setPickedC(false);
+    adjPoints(true);
+  }
 
   return (
     <div className="row sheet--charbg">
@@ -152,15 +203,28 @@ const Options = ({ points, adjPoints, addSkill }) => {
           provide you with some aid on occation
         </Words>
         <Line animate />
-        <h4>Skills</h4>
-        <Line animate />
-        <div className="flex-wrap">
-          {Object.keys(Skill).map((key) => (
+        <div className="row">
+          <h4>Skills</h4>
+          {skills.length > 0 && (
             <Button
               animate
+              style={{ margin: "10px" }}
+              layer="success"
+              onClick={() => clearSkills()}
+            >
+              [X] Clear Skills
+            </Button>
+          )}
+        </div>
+        <Line animate />
+        <div className="flex-wrap">
+          {Object.keys(Skill).map((key, index) => (
+            <Button
+              animate
+              disabled={pickedSkills[index]}
               style={{ margin: "5px" }}
-              layer={noPoints ? "alert" : 'control'}
-              onClick={() => addSkill(key)}
+              layer={noPoints ? "alert" : "control"}
+              onClick={() => addSkill(key, index)}
             >
               {key}: <span className="sheet--skill-opt">{Skill[key]}</span>
             </Button>
@@ -170,12 +234,13 @@ const Options = ({ points, adjPoints, addSkill }) => {
         <h4>Alien Skills (Requires you to be non-human)</h4>
         <Line animate />
         <div className="flex-wrap">
-          {Object.keys(SkillAlien).map((key) => (
+          {Object.keys(SkillAlien).map((key, index) => (
             <Button
               animate
+              disabled={pickedASkills[index]}
               style={{ margin: "5px" }}
-              layer={noPoints ? "alert" : 'control'}
-              onClick={() => addSkill(key)}
+              layer={noPoints ? "alert" : "control"}
+              onClick={() => addSkill(key, index, true)}
             >
               {key}: <span className="sheet--skill-opt">{SkillAlien[key]}</span>
             </Button>
@@ -183,6 +248,30 @@ const Options = ({ points, adjPoints, addSkill }) => {
         </div>
         <Line animate />
         <h4>Contacts</h4>
+        <Words>
+          You are limited to 1 contact should you choose to take one
+        </Words>
+        <Line animate />
+        {pickedContact && (
+          <Button
+            animate
+            style={{ margin: "10px" }}
+            layer="success"
+            onClick={() => clearContact()}
+          >
+            [X] Remove Contact
+          </Button>
+        )}
+        {Object.keys(contacts).map((key) => (
+          <Button
+            animate
+            style={{ margin: "5px" }}
+            layer={noPoints || pickedContact ? "alert" : "control"}
+            onClick={() => addContact(key)}
+          >
+            {key}: <span className="sheet--skill-opt">{contacts[key]}</span>
+          </Button>
+        ))}
       </Frame>
     </div>
   );
