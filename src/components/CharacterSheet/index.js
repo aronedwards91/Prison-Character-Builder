@@ -44,7 +44,9 @@ const Layout = () => {
               onChange={imgInputTrigger}
               style={{ display: "none" }}
             />
-            <Button onClick={thisFileUpload}>[+]</Button>
+            <div className="printhide">
+              <Button onClick={thisFileUpload}>[+]</Button>
+            </div>
           </div>
         </div>
         <div className="sheet--item">
@@ -79,7 +81,7 @@ const Layout = () => {
             <div className="sheet--input-label">
               {"Stress:                 / 3"}
             </div>
-            <Line animate style={{margin: '10px 0 0'}}/>
+            <Line animate style={{ margin: "10px 0 0" }} />
             <Words style={{ padding: "10px" }}>Skills</Words>
             <Line animate />
             <div className="sheet--skill-fill">{skills.join("\n")}</div>
@@ -191,7 +193,7 @@ const Options = ({
   }
 
   return (
-    <div className="row sheet--charbg">
+    <div className="row sheet--charbg printhide">
       <Frame show animate level={3} corners={4} layer="primary">
         <div className="row row-space" style={{ padding: "0 20px" }}>
           <h3>Options</h3>

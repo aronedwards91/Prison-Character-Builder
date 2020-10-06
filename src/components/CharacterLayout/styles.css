@@ -1,6 +1,5 @@
 @media print {
-  .printhide,
-  .char--main {
+  .printhide {
     display: none;
   }
   .printshow {
@@ -14,7 +13,12 @@
   position: absolute;
   display: flex;
   flex-direction: row;
+  width: 95%;
 }
 .char--sheet {
   width: 900px;
+  margin-right: 10px;
+}
+.char--info {
+  margin: 10px 0;
 }
