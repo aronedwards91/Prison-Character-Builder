@@ -114,8 +114,9 @@ const Skill = {
   Persuation: "The ability to logically convince another",
   Charm: "The ability to use your charisma to influence others",
   Intimidation: "How easily you can scare others",
-  Bluff: "convincing liar",
+  Bluff: "Convincing liar",
   Strength: "Sheer physical ability",
+  Athletics: "Endurance and speed",
   Calm: "Inner mental strength",
   Sneak: "How quietly you can move around",
   Pickpocket: "How sneaky your fingers are",
@@ -131,7 +132,11 @@ const SkillAlien = {
   Darkvision: "See in the dark",
   Hypersmell: "Bloodhound like nasal ability",
   Echolocation: "3d sound based vision",
-  StickyHands: "lizard like cling ability",
+  StickyHands: "Lizard like cling ability",
+  EmpathicLink: "Read moods and feelings",
+  Regeneration: "heal quickly from wounds",
+  FlameBorn: "Immunity to heat",
+  Sprightly: "Jump 3 times human ability",
 };
 const skillAlienArr = Object.keys(SkillAlien).map(() => false);
 const contacts = {
